@@ -7,12 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Model\china;
 class ChinaController extends Controller
 {
-    function population(){
+    function population()
+    {
         //header("Access-Control-Allow-Origin:*");
         $data = china::get(['province','population']);
         $tanster = array();
         $n = 0;
-        foreach ($data as $value){
+        foreach ($data as $value)
+        {
             $tanster[$n]['name'] = $value->province;
             $tanster[$n]['value'] = bcdiv($value->population,10000,0);
             $n++;

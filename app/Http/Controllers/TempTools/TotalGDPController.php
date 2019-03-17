@@ -134,7 +134,7 @@ class TotalGDPController extends Controller{
                     'man' => $man,
                     'woman' => $woman,
                     'country' =>$every[0],
-                    'year' => $year,
+                    'data_date' => $year,
                     'continent' => $every[1]
                 ]
             );
@@ -244,7 +244,7 @@ class TotalGDPController extends Controller{
                 $this->dataPush($data,$tanster,$key);
             }
             foreach($data as $val){
-                $val['year'] = $year;
+                $val['data_date'] = $year;
                 Country_area::create($val);
             }
             $year++;
@@ -318,7 +318,7 @@ class TotalGDPController extends Controller{
             }
 
             foreach($data as $k=>$v){
-                $v['year'] = $year;
+                $v['data_date'] = $year;
                 country_wealth::create($v);
             }
             $year++;
@@ -355,7 +355,7 @@ eof;
             $tanster = array();
             $n = 0;
             foreach($data as $value){
-                $tanster['year'] = 2018;
+                $tanster['data_date'] = 2018;
                 $tanster['province'] = $value[1];
                 $tanster['population'] = bcmul(floatval(substr($value[3],2,-3)),10000);
                 $n++;

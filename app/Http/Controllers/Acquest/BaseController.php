@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Acquest;
 
-use Illuminate\Database\Concerns\BuildsQueries;
 use QL;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class BaseController extends Controller
 {
     function __construct(){
         set_time_limit(0);
+        ignore_user_abort(true);
     }
 
     /*以指定规则筛选一条数据*/
@@ -29,15 +28,23 @@ class BaseController extends Controller
         });
     }
 
-    /*周六周日没有业务的平台, 不执行数据抓取*/
-    function isWeek(){
-        $week = date('w');
-        switch($week){
-            case '6':
-                die('星期六平台暂停业务,没有数据更新');
-            case '0':
-                die('星期日平台暂停业务,没有数据更新');
+
+    function isDate($model,$updated_at,$field='data_date')
+    {
+        $data = $model->orderBy($field,'desc')->pluck($field)->first();
+        $date = substr($data,0,10);
+        if($updated_at === $date)
+        {
+            die('没有数据更新');
         }
+    }
+
+    function get($url){
+        $url = $url;
+        $con = curl_init((string)$url);
+        curl_setopt($con, CURLOPT_HEADER, false);
+        curl_setopt($con, CURLOPT_RETURNTRANSFER,true);
+        return curl_exec($con);
     }
 
 }

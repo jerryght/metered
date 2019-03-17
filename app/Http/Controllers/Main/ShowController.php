@@ -16,14 +16,14 @@ use App\Http\Controllers\BaseController;
 class ShowController extends BaseController{
 
     function index(){
-        $land = Country_area::where('year',2017)->orderBy('area','desc')->offset(0)->limit(5)->get(['country','area'])->toArray();
+        $land = Country_area::where('data_date',2017)->orderBy('area','desc')->offset(0)->limit(5)->get(['country','area'])->toArray();
         $this->EnglishName($land);
         $this->forsubstr($land,'country',15);
         return view('Main\index',['land'=>$land]);
     }
 
     function population(){
-        $data = DB::select('select population,`year` from history_total_population where `year`%3=2');
+        $data = DB::select('select population,`data_date` from history_total_population where `data_date`%3=2');
         $year = array();
         $population = array();
         for($i=0; $i<count($data); $i++){
