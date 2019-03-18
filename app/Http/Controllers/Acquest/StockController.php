@@ -71,5 +71,7 @@ class StockController extends BaseController
             },3);
         }
 
+        return true;
+
     }
 }

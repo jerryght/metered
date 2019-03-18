@@ -37,6 +37,7 @@ Route::get('/company','TempTools\StockController@company');
 Route::get('/country','TempTools\TotalGDPController@population');
 Route::get('/countrygdp','TempTools\TotalGDPController@everyCountryGDP');
 Route::get('/currency','TempTools\CurrencyController@baseinfo');
+Route::get('/house','TempTools\HouseController@index');
 Route::get('/propopu','TempTools\TotalGDPController@propopu');
 Route::get('/shenzhen','Acquest\StockController@shenzhen');
 Route::get('/stock','TempTools\TotalGDPController@sstock');

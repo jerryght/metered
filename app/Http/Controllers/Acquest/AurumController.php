@@ -48,4 +48,8 @@ class AurumController extends BaseController
             shanghai_au::create($attributes);
         });
     }
+
+    function london(){
+
+    }
 }

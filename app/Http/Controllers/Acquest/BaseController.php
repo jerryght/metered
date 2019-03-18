@@ -39,9 +39,8 @@ class BaseController extends Controller
         }
     }
 
-    function get($url){
-        $url = $url;
-        $con = curl_init((string)$url);
+    function get(string $url){
+        $con = curl_init($url);
         curl_setopt($con, CURLOPT_HEADER, false);
         curl_setopt($con, CURLOPT_RETURNTRANSFER,true);
         return curl_exec($con);
