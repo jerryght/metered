@@ -22,17 +22,6 @@
 	<link href="{{ URL::asset('css/retina.css') }}" rel="stylesheet" />
 	<!-- end: CSS -->
 
-
-	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
-	<!--[if lt IE 9]-->
-	  	<!--<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>-->
-		<link id="ie-style" href="{{ URL::asset('css/ie.css') }}" rel="stylesheet">
-	<!--[endif]-->
-
-	<!--[if IE 9]-->
-		<link id="ie9style" href="{{ URL::asset('css/ie9.css') }}" rel="stylesheet">
-	<!--[endif]-->
-
 	<!-- start: Favicon and Touch Icons -->
 	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ URL::asset('ico/apple-touch-icon-144-precomposed.png') }}" />
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ URL::asset('ico/apple-touch-icon-114-precomposed.png') }}" />
@@ -390,12 +379,6 @@
 
     <div class="clearfix"></div>
 
-    <footer>
-        <p>
-            <span style="text-align:left;float:left">Copyright &copy; 2014.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></span>
-        </p>
-
-    </footer>
 
 </div><!--/.fluid-container-->
 
@@ -437,7 +420,13 @@
     <!-- <script src="{{ URL::asset('js/retina.js') }}"></script> -->
     <script src="{{ URL::asset('js/jquery.placeholder.min.js') }}"></script>
     <script src="{{ URL::asset('js/wizard.min.js') }}"></script>
+	<script src="js/core.min.js"></script>
 	<!-- end: JavaScript-->
+
+		<!-- charts.min.js -->
+		<script src="js/charts.min.js"></script>
+		<script src="js/custom.min.js"></script>
+		<!-- end: JavaScript-->
 
 
 </body>

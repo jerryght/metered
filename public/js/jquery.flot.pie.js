@@ -186,7 +186,7 @@ More detail and specific examples can be found in the included HTML file.
 		
 		function setupPie()
 		{	
-			var placeholder = plot.getPlaceholder(),
+			/*var placeholder = plot.getPlaceholder(),
 			          width = placeholder.width(),
 			          height = placeholder.height();
 			
@@ -208,7 +208,7 @@ More detail and specific examples can be found in the included HTML file.
 			if (centerLeft<maxRadius)
 				centerLeft = maxRadius;
 			else if (centerLeft>width-maxRadius)
-				centerLeft = width-maxRadius;
+				centerLeft = width-maxRadius;*/
 		}
 		
 		function fixData(data)

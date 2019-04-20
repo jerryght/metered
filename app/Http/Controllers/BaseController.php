@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Country;
+use App\Model\country;
 class BaseController extends Controller
 {
     function ToArray($stdClass,$attribute)
@@ -19,7 +19,7 @@ class BaseController extends Controller
     {
         foreach($ChineseName as &$value)
         {
-             $value['country'] = Country::where('ChineseName',$value['country'])->get(['EnglishName'])->toArray()[0]['EnglishName'];
+             $value['country'] = country::where('ChineseName',$value['country'])->get(['EnglishName'])->toArray()[0]['EnglishName'];
         }
     }
 

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\TempTools;
 
-use App\Model\House;
+use App\Model\cd_neigh;
+use App\Model\cd_neighbourhood;
+use App\Model\cd_house;
+use App\Model\house;
+use http\QueryString;
 use QL\QueryList;
 use App\Http\Controllers\Acquest\BaseController;
 use Illuminate\Support\Facades\DB;
@@ -11,64 +15,132 @@ use Illuminate\Support\Facades\Storage;
 
 class HouseController extends BaseController
 {
-    function index()
-    {
-        $countFile = 'storage/count.txt';
-        $count= Storage::get($countFile);
-        if($count === "")
-        {
-            $page = 1;
-        }else{
-            $page = $count;
-        }
-        $rules = [
-             ['.rank-table>ul>li>span','text'],
-        ];
-        $tansfer = array();
-        for(; $page<2731; $page++) {
-            $url = 'http://cd.jiwu.com/jilu/list-page'.$page.'.html';
-            $data = QueryList::get($url)->rules($rules)->query()->getData()->all();
-            $i = 0;
-            foreach ($data as $key => $val)
-            {
-                $index = $key % 6;
-                switch ($index) {
-                    case 0:
-                        $i++;
-                        $tansfer[$i]['neighbourhood'] = $val[0] ?: '';
-                        break;
-                    case 1:
-                        $tansfer[$i]['mark'] = $val[0] ?: '';
-                        break;
-                    case 2:
-                        $tansfer[$i]['area'] = $this->toInt($val[0],-6);
-                        break;
-                    case 3:
-                        $tansfer[$i]['data_date'] = $val[0] ?: '';
-                        break;
-                    case 4:
-                        $tansfer[$i]['unit_price'] = $this->toInt($val[0],-3);
-                        break;
-                    case 5:
-                        $tansfer[$i]['total_price'] = $this->toInt($val[0],-3);
-                        break;
-                }
+    function neig(){
+        $aurl = ['xiaoqu/longquanyi','xiaoqu/xindou','xiaoqu/tianfuxinqunanqu','xiaoqu/qingbaijiang','xiaoqu/doujiangyan','xiaoqu/pengzhou','xiaoqu/jianyang'];
+        $aname = ['龙泉驿','新都','天府新区南区','青白江','都江堰','彭州','简阳'];
+        $domain = 'https://cd.lianjia.com/';
+        $index = 0;
+        $model = new cd_neigh();
+        foreach($aurl as $val){
+            $url = $domain.$val.'/';
+            $rules = [
+                'id' => ['.xiaoquListItem','data-id'],
+                'name' => ['.xiaoquListItem .title a','text'],
+            ];
+            $content = QueryList::get($url.'/pg1cro21');
+            $page = $content->find('.house-lst-page-box')->attr('page-data');
+            $total = (int)$content->find('.total span')->text();
+            unset($content);
+            $page = (int)substr($page,13,strpos($page,',')-13);
+            $order = 'cro21';
+            $attr = ['area'=>$aname[$index]];
+            a:
+            $this->item($page, $url, $rules, $model, $order, $attr);
+            if($total > 900){
+                $total = 0;
+                $order = 'cro22';
+                goto a;
             }
-            foreach ($tansfer as $key=>$value)
-            {
-                if($value['mark'] === '房源信息')
-                {
+            $index++;
+        }
+
+    }
+
+    function neigPlus(){
+        $aurl = ['xiaoqu/qingbaijiang','xiaoqu/doujiangyan','xiaoqu/pengzhou','xiaoqu/jianyang'];
+        $domain = 'https://cd.lianjia.com';
+        $model = new cd_neigh();
+        $n = 0;
+        foreach($aurl as $val){
+            $url = $domain.'/'.$val;
+            $rules = [
+                'road' =>['.position div:last a','href']
+            ];
+            $road = QueryList::get($url)->rules($rules)->query()->getData()->all();
+            $rules = [
+                'id' => ['.xiaoquListItem','data-id'],
+                'name' => ['.xiaoquListItem .title a','text'],
+                'area' => ['.district','text'],
+            ];
+            $file = 'storage/tansfer.txt';
+            $urlCache = Storage::get($file);
+            foreach($road as $item) {
+                if(strstr($urlCache,$item['road'])){
                     continue;
                 }
-                DB::transaction(function () use ($value) {
-                    House::create($value);
-                }, 3);
+                $n++;
+                Storage::append($file,$item['road']);
+                Storage::disk('local')->put('storage/last_flas.txt',$val);
+                $page = QueryList::get($domain.$item['road'])->find('.house-lst-page-box')->attr('page-data');
+                $page = (int)substr($page,13,strpos($page,',')-13);
+                $this->item($page, $domain.$item['road'], $rules, $model);
             }
-            Storage::disk('local')->put($countFile, $page);
+        }
+    }
+
+    function tarding(){
+        $domain = 'https://cd.lianjia.com/chengjiao/';
+        $countFile = 'storage/count.txt';
+        $count500 = 'storage/count500.txt';
+        $c5 = (int)Storage::get($count500);
+        Storage::put($count500,$c5+1);
+        $offset = (int)Storage::get($countFile);
+        $neigh = cd_neigh::offset($offset-$c5)->limit(13753-$offset)->get(['id','name'])->toArray();
+        $model = new cd_house();
+        foreach($neigh as $val){
+            $html = file_get_contents($domain.'rs'.$val['name']);
+            $ql = QueryList::html($html);
+            $total = (int)trim($ql->find('.total span')->text());
+            $page = $ql->find('.house-lst-page-box')->attr('page-data');
+            $page = explode(',',$page);
+            $page = substr($page[0],13);
+            $offset++;
+            Storage::disk('local')->put($countFile,$offset);
+            if($total === 0) continue;
+            $order = 'ddo31rs';
+
+            $rules = [
+                'id' => ['.listContent .title a','href'],
+                'cd_neighs_id' => ['.listContent .title a','text']
+            ];
+            a:
+            for($i=1; $i<=$page; $i++){
+                $url = $domain.'pg'.$i.$order.$val['name'];
+                $data = QueryList::get($url)->rules($rules)->query()->getData();
+                $data = $data->all();
+                foreach ($data as &$v){
+                    $v['id'] = substr($v['id'],strrpos($v['id'],'/')+1,-5);
+                    if($val['name'] !== $v['cd_neighs_id']){
+                        $name = explode(' ', $v['cd_neighs_id']);
+                        $ne = cd_neigh::where('name',$name[0])->first(['id']);
+                        $v['cd_neighs_id'] = $ne ? $ne->id : 0;
+                    }else{
+                        $v['cd_neighs_id'] = $val['id'];
+                    }
+                }
+                $this->save($model, $data);
+            }
+            if($total > 900){
+                $total = 0;
+                $order = 'ddo32rs';
+                goto a;
+            }
+        }
+    }
+
+    function item($page, $url, $rules, $model, $order='', $attr=[]){
+        for($i=1; $i<=$page; $i++){
+            Storage::put('storage/last_flag.txt',$url.'pg'.$i.$order);
+            $data = QueryList::get($url.'pg'.$i.$order)->rules($rules)->query()->getData();
+            $this->save($model, $data->all(), $attr);
         }
     }
 
     function toInt($string,$len){
- return (int)str_replace(',','',substr($string,0,$len)) ?: '';
+        return (int)str_replace(',','',substr($string,0,$len)) ?: '';
+    }
+
+    function ajax(){
+        return view('TempTools\ajax');
     }
 }

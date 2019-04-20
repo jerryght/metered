@@ -2,10 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Model\BaseModel;
 
-class currency extends Model
+class currency extends BaseModel
 {
-    protected $table = 'currency';
     protected $guarded = ['id','created_at','updated_at'];
 }

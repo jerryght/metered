@@ -13,10 +13,10 @@ use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
 use QL;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller;
-use App\Model\World_wealth;
+use App\Model\world_wealth;
 use App\Model\country_wealth;
-use App\Model\Country_area;
-use App\Model\Country;
+use App\Model\country_area;
+use App\Model\country;
 
 class TotalGDPController extends Controller{
     function index(){
@@ -124,7 +124,7 @@ class TotalGDPController extends Controller{
             $man= $every['man'];
             $woman= $every['woman'];
             $year= $_GET['year'].'-01-01';
-
+            die('2d');
             $re = DB::table('country_populations')->insert(
                 [
                     'population' => intval($every[2]),
@@ -245,7 +245,7 @@ class TotalGDPController extends Controller{
             }
             foreach($data as $val){
                 $val['data_date'] = $year;
-                Country_area::create($val);
+                country_area::create($val);
             }
             $year++;
             $data = array();
@@ -273,7 +273,7 @@ class TotalGDPController extends Controller{
                 $urlid = $val.$year;
                 $data[$key] = $this->get_data($urlid,$tag);
             }
-            World_wealth::create($data);
+            world_wealth::create($data);
             $year++;
         }
 
@@ -372,7 +372,7 @@ EOD;
             return $row->find('td')->texts()->all();
         });
         foreach($tableRows as $value){
-            Country::create([
+            country::create([
                 'ChineseName' =>$value[2],
                 'EnglishName' => $value[0],
                 'EnglishNameSimple' => $value[1]

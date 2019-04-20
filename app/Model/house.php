@@ -4,9 +4,8 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class House extends Model
+class house extends Model
 {
-    protected $table = 'house';
-    protected $guarded = ['id'];
+    protected $guarded = ['id','created_at'];
     const UPDATED_AT = null;
 }

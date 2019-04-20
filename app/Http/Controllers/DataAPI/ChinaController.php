@@ -9,16 +9,17 @@ class ChinaController extends Controller
 {
     function population()
     {
-        //header("Access-Control-Allow-Origin:*");
-        $data = china::get(['province','population']);
+        $data = china::get(['province','population','simple']);
         $tanster = array();
         $n = 0;
         foreach ($data as $value)
         {
             $tanster[$n]['name'] = $value->province;
-            $tanster[$n]['value'] = bcdiv($value->population,10000,0);
+            $tanster[$n]['value'] = (int)bcdiv($value->population,10000,0);
+            $tanster[$n]['simple'] = $value->simple;
             $n++;
         }
+        shuffle($tanster);
         echo json_encode($tanster);
     }
 }

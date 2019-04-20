@@ -1,5 +1,6 @@
 @extends('Public.MainFrame')
 @section('content')
+    <link href="{{ URL::asset('css/style_plus.css') }}" rel="stylesheet" />
     <!-- start: Content -->
     <div id="content" class="span10">
 
@@ -9,22 +10,22 @@
                 <div class="boxchart-overlay blue">
                     <div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
                 </div>
-                <span class="title">London</span>
-                <span class="value">$4 589</span>
+                <span class="title">地区代码</span>
+                <span class="value acode"></span>
             </div>
 
             <div class="span3 smallstat box mobileHalf" ontablet="span6" ondesktop="span3">
                 <div class="boxchart-overlay red">
                     <div class="boxchart">1,2,6,4,0,8,2,4,5,3,1,7,5</div>
                 </div>
-                <span class="title">Zurich</span>
-                <span class="value">$789</span>
+                <span class="title">日期</span>
+                <span class="value cur-date"></span>
             </div>
 
             <div class="span3 smallstat box mobileHalf noMargin" ontablet="span6" ondesktop="span3">
                 <i class="icon-download-alt green"></i>
-                <span class="title">NYC</span>
-                <span class="value">$1 999,99</span>
+                <span class="title">操作系统</span>
+                <span class="value system">$1 999,99</span>
             </div>
 
             <div class="span3 smallstat mobileHalf box" ontablet="span6" ondesktop="span3">
@@ -39,7 +40,7 @@
         <div class="row-fluid">
             <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 
-            <div id="world_population" class="row-fluid box main-chart" style="height:400px;"></div>
+            <div id="world_population" class="main-chart" style="height:349px;"></div>
             <!--<div id="main" class="span6" style="height:400px;"></div>-->
         </div>
 
@@ -55,7 +56,7 @@
                                 <a class="icon-chevron-down"></a>
                             </div>
                             <div class="right">
-                                <h2>World Ranking of Territorial Areas 2017</h2>
+                                <h2 class="text-center">World Ranking of Territorial Areas</h2>
                             </div>
                         </div>
                         <div class="content row-fluid">
@@ -102,7 +103,7 @@
 
             <div class="box blue span6 noMargin" ontablet="span12" ondesktop="span6">
                 <div class="box-content">
-                    <div  id="container" class="chart-type2" style="height:299px;margin:0"></div>
+                    <div id="container" class="chart-type2" style="height:256px;"></div>
 
                     <div class="verticalChart">
 
@@ -111,12 +112,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>37%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">US</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -125,12 +125,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>16%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">PL</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -139,12 +138,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>12%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">GB</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -153,12 +151,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>9%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">DE</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -167,12 +164,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>7%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">NL</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -181,12 +177,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>6%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">CA</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -195,12 +190,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>5%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">FI</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -209,12 +203,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>4%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">RU</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -223,12 +216,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>3%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">AU</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -237,12 +229,11 @@
                             <div class="bar">
 
                                 <div class="value">
-                                    <span>1%</span>
                                 </div>
 
                             </div>
 
-                            <div class="title">N/A</div>
+                            <div class="title"></div>
 
                         </div>
 
@@ -594,9 +585,32 @@
 
 
     </div>
-<script src="{{ URL::asset('js/echarts.js') }}"></script>
-<script src="{{ URL::asset('js/topapply/homeui.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('js/map/js/china.js') }}" ></script>
+    <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+    <script>
+        function getOS() { // 获取当前操作系统
+            var os;
+            if (navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Linux') > -1) {
+                os = 'Android';
+            } else if (navigator.userAgent.indexOf('iPhone') > -1) {
+                os = 'iOS';
+            } else if (navigator.userAgent.indexOf('Windows') > -1) {
+                os = 'Windows';
+            } else {
+                os = 'Others';
+            }
+            return os;
+        }
+        let acode = document.getElementsByClassName('acode')[0];
+        acode.innerHTML = returnCitySN['cid'];
+        let cur_date = document.getElementsByClassName('cur-date')[0];
+        let d = new Date();
+        cur_date.innerHTML = d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate();
+        let system = document.getElementsByClassName('system')[0];
+        system.innerHTML = getOS();
+    </script>
+<script src="{{ URL::asset('js/echarts/echarts.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('js/map/js/china.js') }}" ></script>
+<script src="{{ URL::asset('js/echarts/home.js') }}"></script>
 
     <!-- end: Content -->
     @endsection

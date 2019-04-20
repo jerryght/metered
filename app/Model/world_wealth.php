@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Model\BaseModel;
 
-class World_wealth extends Model
+class world_wealth extends BaseModel
 {
     const UPDATED_AT = null;
     protected $guarded = ['id','created_at'];

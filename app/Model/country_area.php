@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Model\BaseModel;
 
-class Country_area extends Model
+class country_area extends BaseModel
 {
     const UPDATED_AT = null;
     protected $guarded = ['id','created_at'];

@@ -2,11 +2,10 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Model\BaseModel;
 
-class exrate_cny extends Model
+class exrate_cny extends BaseModel
 {
-    protected $table = 'exrate_cny';
     protected $guarded = ['id','created_at'];
     const UPDATED_AT = null;
 }

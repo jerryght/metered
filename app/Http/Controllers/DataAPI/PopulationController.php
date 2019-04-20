@@ -13,6 +13,8 @@ use App\Model\country_wealth;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Model\shanghaiau;
+
+
 class PopulationController extends Controller
 {
     function ToArray($stdClass,$attribute,$unit=false)

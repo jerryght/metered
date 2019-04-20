@@ -7,31 +7,23 @@
  */
 namespace app\Http\Controllers\Main;
 
-use App\Model\Country;
+use App\Model\china;
+use App\Model\country;
 use QL;
 use Illuminate\Support\Facades\DB;
-use App\Model\Country_area;
+use App\Model\country_area;
 use App\Http\Controllers\BaseController;
 
 class ShowController extends BaseController{
 
     function index(){
-        $land = Country_area::where('data_date',2017)->orderBy('area','desc')->offset(0)->limit(5)->get(['country','area'])->toArray();
+        $land = country_area::where('data_date',2017)->orderBy('area','desc')->offset(0)->limit(5)->get(['country','area'])->toArray();
         $this->EnglishName($land);
         $this->forsubstr($land,'country',15);
         return view('Main\index',['land'=>$land]);
     }
 
-    function population(){
-        $data = DB::select('select population,`data_date` from history_total_population where `data_date`%3=2');
-        $year = array();
-        $population = array();
-        for($i=0; $i<count($data); $i++){
-            $year[] = $data[$i]->year;
-            $population[] = $data[$i]->population;
-        }
-        echo json_encode(array('years'=>$year,'population'=>$population));
-    }
+
     function money(){
         $host = 'http://www.sge.com.cn/';
         $spider = new QL\QueryList();

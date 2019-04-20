@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Model\BaseModel;
 
-class china extends Model
+class china extends BaseModel
 {
     protected $guarded = ['id','created_at','updated_at'];
 }

@@ -8,7 +8,9 @@
 namespace app\Http\Controllers\Acquest;
 
 use QL;
+use App\Model\china;
 use App\Model\shanghai_au;
+use App\Events\OrderShipped;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Acquest\BaseController;
 
@@ -25,7 +27,7 @@ class AurumController extends BaseController
         );
         $link = $spider->html($html)->rules($rules)->query()->getData();
         $updated_at = $link[0]['date'];
-        $this->isDate(new shanghai_au(),$updated_at);
+        //$this->isDate(new shanghai_au(),$updated_at);
         $exactAddr = $host.$link[0]['link'];
 
         $html = file_get_contents($exactAddr);
@@ -39,13 +41,12 @@ class AurumController extends BaseController
         $price = $arr[0]['price'];
         $weight = str_replace(',','',$arr[0]['weight']);
         $amounts= str_replace(',','',$arr[0]['amounts']);
-
         $attributes = array('price'=>$price, 'weight'=>$weight, 'amounts'=>$amounts, 'data_date'=>$updated_at);
-        //$user->fill($attributes);
-        //$user ->save();die;
+            $r = shanghai_au::firstOrCreate($attributes);
+            dd($r);
         DB::transaction(function() use ($attributes)
         {
-            shanghai_au::create($attributes);
+            shanghai_au::firstOrCreate($attributes);
         });
     }
 

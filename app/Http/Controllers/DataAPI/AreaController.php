@@ -5,14 +5,14 @@ namespace App\Http\Controllers\DataAPI;
 use App\Model\country_wealth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
-use App\Model\Country_area;
+use App\Model\country_area;
 
 class AreaController extends BaseController
 {
     function area ()
     {
-        $totalArea = Country_area::where('data_date',2017)->sum('area');
-        $orderArea = Country_area::where('data_date',2017)->orderBy('area','desc')->offset(0)->limit(5)->get(['country','area']);
+        $totalArea = country_area::where('data_date',2017)->sum('area');
+        $orderArea = country_area::where('data_date',2017)->orderBy('area','desc')->offset(0)->limit(5)->get(['country','area']);
         $tanster = array();
         $country = array();
         $n = 0;

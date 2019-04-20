@@ -2,10 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Model\BaseModel;
 
-class goods_trend extends Model
+class goods_trend extends BaseModel
 {
-    protected $table = 'goods_trend';
     protected $guarded = ['id','created_at','updated_at'];
 }
