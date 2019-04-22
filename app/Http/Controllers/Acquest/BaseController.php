@@ -41,11 +41,20 @@ class BaseController extends Controller
         }
     }
 
-    function get(string $url){
-        $con = curl_init($url);
-        curl_setopt($con, CURLOPT_HEADER, false);
-        curl_setopt($con, CURLOPT_RETURNTRANSFER,true);
-        return curl_exec($con);
+
+    function get_http_contents($url){
+        $ch = curl_init();
+        //设置选项，包括URL
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//绕过ssl验证
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        //执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        //释放curl句柄
+        curl_close($ch);
+        return $output;
     }
 
     function post(string $url, $data=null){
@@ -62,6 +71,7 @@ class BaseController extends Controller
         curl_close($curl);
         return $output;
     }
+
     function fsubstr(&$lis, $start, $len, $attr='id'){
         foreach($lis as &$val){
             $val[$attr] = substr($val[$attr], $start, $len);
@@ -77,9 +87,6 @@ class BaseController extends Controller
             }
         }
         foreach($data as $val){
-            if($model::find($val['id'])){
-                continue;
-            }
             DB::transaction(function() use ($model,$val)
             {
                 $model::firstOrCreate($val);

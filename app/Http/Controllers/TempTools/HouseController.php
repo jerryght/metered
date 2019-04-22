@@ -5,8 +5,10 @@ namespace App\Http\Controllers\TempTools;
 use App\Model\cd_neigh;
 use App\Model\cd_neighbourhood;
 use App\Model\cd_house;
+use App\Model\cd_tarding;
 use App\Model\house;
 use http\QueryString;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use QL\QueryList;
 use App\Http\Controllers\Acquest\BaseController;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 
 class HouseController extends BaseController
 {
+
     function neig(){
         $aurl = ['xiaoqu/longquanyi','xiaoqu/xindou','xiaoqu/tianfuxinqunanqu','xiaoqu/qingbaijiang','xiaoqu/doujiangyan','xiaoqu/pengzhou','xiaoqu/jianyang'];
         $aname = ['龙泉驿','新都','天府新区南区','青白江','都江堰','彭州','简阳'];
@@ -78,6 +81,55 @@ class HouseController extends BaseController
         }
     }
 
+    function neigDetail(){
+        //$domain = 'https://cd.lianjia.com/xiaoqu/';
+        //$id = cd_neigh::where(['year'=>0,'unit'=>0])->get();
+        //foreach($id as $v){
+            //$url = $domain.$v['id'];
+            //$ql = QueryList::html(file_get_contents($url));
+            $html = Storage::get('storage/html.txt');
+            $ql = QueryList::html($html);
+            //$info = $ql->find('xiaoquInfo')->html();
+            //$ql = QueryList::html($info);
+            $start_time = microtime(true);
+            $year = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(0)')->text();
+            $type = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(1)')->text();
+            $expense = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(2)')->text();
+            $unit = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(5)')->text();
+            $household = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(6)')->text();
+            $time_length= microtime(true)-$start_time;
+            dd($time_length);
+            //$v->year = (int)substr($year,0,4);
+            //$v->type = $type;
+            //$v->expense = (float)substr($expense,0,-10);
+            //$v->unit = (int)substr($unit,0,-1);
+            //$v->household = (int)substr($household,0,-1);
+            //$v->save();
+        //}
+    }
+
+    function houseDetail(){
+        $domain = 'https://cd.lianjia.com/chengjiao/';
+        $id = cd_house::where('type','')->get(['id']);
+        foreach($id as $v){
+            $url = $domain.$v['id'].'.html';
+            $ql = QueryList::html(file_get_contents($url));
+            $year = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(0)')->text();
+            $type = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(1)')->text();
+            $expense = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(2)')->text();
+            $unit = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(5)')->text();
+            $household = $ql->find('.xiaoquInfo .xiaoquInfoContent:eq(6)')->text();
+            $data = [
+                'year' => (int)substr($year,0,4),
+                'type' => $type,
+                'expense' => (float)substr($expense,0,-10),
+                'unit' => (int)substr($unit,0,-1),
+                'household' => (int)substr($household,0,-1)
+            ];
+            cd_neigh::where('id',$v['id'])->update($data);
+        }
+    }
+
     function tarding(){
         $domain = 'https://cd.lianjia.com/chengjiao/';
         $countFile = 'storage/count.txt';
@@ -126,6 +178,44 @@ class HouseController extends BaseController
                 goto a;
             }
         }
+    }
+
+
+    function sell(){
+        $domain = 'https://cd.lianjia.com/ershoufang/';
+        $file = 'storage/tansfer.txt';
+        $offset = (int)Storage::get($file);
+        $idList = cd_neigh::offset($offset)->limit(13753-$offset)->get(['name']);
+        ini_set('default_socket_timeout', 1);
+        foreach($idList as $val){
+            $url = $domain.'rs'.$val['name'];
+            $html = file_get_contents($url);
+            $ql = QueryList::html($html);
+            $total = (int)trim($ql->find('.total>span')->text());
+            $offset++;
+            if($total === 0){
+                Storage::put($file,$offset);
+                continue;
+            }
+            $rules = [
+                'id' => ['.bigImgList>.item','data-houseid'],
+            ];
+            $page = $ql->find('.house-lst-page-box')->attr('page-data');
+            $page = explode(',',$page);
+            $page = substr($page[0],13);
+            for ($i=1; $i<=$page; $i++){
+                $html = file_get_contents($domain.'pg'.$i.'rs'.$val['name']);
+                $ql = QueryList::html($html);
+                $id = $ql->rules($rules)->query()->getData()->all();
+                foreach($id as $v){
+                    cd_tarding::firstOrCreate([
+                        'id' => $v['id']
+                    ]);
+                }
+            }
+            Storage::put($file,$offset);
+        }
+        die('success');
     }
 
     function item($page, $url, $rules, $model, $order='', $attr=[]){

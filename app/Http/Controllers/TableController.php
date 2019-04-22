@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TableController extends Controller
 {
@@ -261,6 +262,11 @@ class TableController extends Controller
     ];
 
     function index(){
-
+        $table = 'article';
+        $data = 'SELECT * FROM '.$table;
+        $file = "'/Users/liaoliao/data/$table.txt'";
+        $format = "fields terminated by \",\" lines terminated by '\n'";
+        $sql = $data." INTO OUTFILE $file $format";
+        DB::select($sql);
     }
 }

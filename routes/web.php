@@ -51,6 +51,14 @@ Route::group(['namespace' => 'TempTools'], function(){
     Route::get('neigPlus', 'HouseController@neigPlus');
     Route::get('tarding', 'HouseController@tarding');
     Route::get('ajax', 'HouseController@ajax');
+    Route::get('sell', 'HouseController@sell');
 
 });
+
+Route::group(['prefix' => 'house/get', 'namespace' => 'TempTools'],function(){
+    Route::get('neigDetail', 'HouseController@neigDetail');
+    Route::get('houseDetail', 'HouseController@houseDetail');
+});
+
+Route::get('/saveup', 'TableController@index');
 Route::get('/shenzhen','Acquest\StockController@shenzhen');

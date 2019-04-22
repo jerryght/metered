@@ -6,7 +6,9 @@
 <body>
 <script type="text/javascript">
     function ajax(url, method = 'GET' ){
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
+        let d = new Date();
+        let space = 0;
         xhr.open(method, url);
         xhr.send();
         xhr.onreadystatechange = function(){
@@ -20,7 +22,7 @@
             console.log(xhr.status);
         }
     }
-    let house = '/tarding';
+    let house = '/sell';
     ajax(house);
 </script>
 </body>
