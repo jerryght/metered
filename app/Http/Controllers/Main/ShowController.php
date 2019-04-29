@@ -20,7 +20,7 @@ class ShowController extends BaseController{
         $land = country_area::where('data_date',2017)->orderBy('area','desc')->offset(0)->limit(5)->get(['country','area'])->toArray();
         $this->EnglishName($land);
         $this->forsubstr($land,'country',15);
-        return view('Main\index',['land'=>$land]);
+        return view('Main.index',['land'=>$land]);
     }
 
 
